@@ -3,4 +3,5 @@ node_modules/
 dist/
 .next/
 .yalc/
+.yarn/
 yalc.lock

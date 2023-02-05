@@ -10,6 +10,8 @@ import React, {
 } from 'react'
 import type { UseThemeProps, ThemeProviderProps } from './types'
 
+import NextScript from 'next/script';
+
 const colorSchemes = ['light', 'dark']
 const MEDIA = '(prefers-color-scheme: dark)'
 const isServer = typeof window === 'undefined'
@@ -27,6 +29,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
 }
 
 const defaultThemes = ['light', 'dark'];
+interface ScriptComponentProps {
+  code: string;
+  nonce?: string;
+}
+const ScriptComponent = ({code, nonce}: ScriptComponentProps) => (
+  <NextScript strategy='beforeInteractive' nonce={nonce} id='next-themes-script'>{`${code}`}</NextScript>
+)
 
 const Theme: React.FC<ThemeProviderProps> = ({
   forcedTheme,
@@ -262,7 +271,7 @@ const ThemeScript = memo(
       )};}${fallbackColorScheme}}catch(t){}}();`
     })()
 
-    return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: scriptSrc }} />
+    return <ScriptComponent nonce={nonce} code={scriptSrc} />
   },
   // Never re-render this component
   () => true
